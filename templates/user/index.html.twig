@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Communauté{% endblock %}
+
+{% block body %}
+        {{form_start(searchForm)}}
+            {{form_widget(searchForm)}}
+        {{form_end(searchForm)}}
+    {% for user in users %}
+    <a href="{{path('app_user', { 'id': user.id })}}">
+        <div class="user">
+            <div class="row">
+                <div class="col-1">
+                    {% if user.profile.image.name is not null %}
+                        <img src="{{ asset(vich_uploader_asset(user.profile, 'imageFile')) }}" height="50" width="50" alt="">
+                    {% elseif user.profile.fixturesImageName is not null %}
+                        <img src="{{asset('images/fixtures/users/' ~ user.profile.fixturesImageName  )}}" height="50" width="50" alt="">
+                    {% else %}
+                        <img src="{{ asset('images/profil-picture-illustration.png') }}" height="50" width="50" alt="">
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                    <h3 style="margin-left: 15px;">{{ user.username }}</h3>
+                </div>
+                <div class="col-3">
+                    <p><i class="fas fa-arrow-circle-up orange-icon"></i> {{ user.questions|length}} <span>questions posées</span></p>
+                </div>
+                <div class="col-3">
+                    <p><i class="fas fa-arrow-circle-down pink-icon"></i> {{ user.answers|length}} <span>avis exprimés</span></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% else %}
+        {% for message in app.flashes('error')%}
+        <div class="alert alert-livequestion">
+            {{message}}
+        </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
